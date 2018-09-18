@@ -1,15 +1,24 @@
-const path = require('path')
-const webpack = require('webpack')
-const vueConfig = require('./vue-loader.config')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const vueConfig = require('./vue-loader.config');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  devtool: isProd ?
-    false :
-    '#cheap-module-source-map',
+  devtool: isProd ? false : '#cheap-module-source-map',
+  stats: {
+    colors: true,
+    reasons: true,
+    hash: true,
+    version: true,
+    timings: true,
+    chunks: true,
+    chunkModules: true,
+    cached: true,
+    cachedAssets: true
+  },
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
@@ -20,14 +29,15 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       // 'echarts': 'echarts/dist/echarts.common.min.js',
-      'vue': 'vue/dist/vue.runtime.min.js',
+      vue: 'vue/dist/vue.runtime.min.js',
       '@': path.resolve('src'),
-      'R': path.resolve('src/components')
+      R: path.resolve('src/components')
     }
   },
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
-    rules: [{
+    rules: [
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueConfig
@@ -47,12 +57,12 @@ module.exports = {
       },
       {
         test: /\.(less|css)$/,
-        use: isProd ?
-          ExtractTextPlugin.extract({
-            use: ['css-loader?minimize','less-loader'],
-            fallback: 'vue-style-loader'
-          }) :
-          ['vue-style-loader', 'css-loader', 'less-loader']
+        use: isProd
+          ? ExtractTextPlugin.extract({
+              use: ['css-loader?minimize', 'less-loader'],
+              fallback: 'vue-style-loader'
+            })
+          : ['vue-style-loader', 'css-loader', 'less-loader']
       }
     ]
   },
@@ -60,24 +70,22 @@ module.exports = {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
   },
-  plugins: isProd ?
-    [
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false,
-          drop_debugger: true,
-          drop_console: true
-        },
-        sourceMap: false // true
-      }),
-      new ExtractTextPlugin({
-        filename: 'common.[chunkhash].css'
-      }),
-      new ExtractTextPlugin({
-        filename: 'common.[chunkhash].less'
-      })
-    ] :
-    [
-      new FriendlyErrorsPlugin()
-    ]
-}
+  plugins: isProd
+    ? [
+        new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            warnings: false,
+            drop_debugger: true,
+            drop_console: true
+          },
+          sourceMap: false // true
+        }),
+        new ExtractTextPlugin({
+          filename: 'common.[chunkhash].css'
+        }),
+        new ExtractTextPlugin({
+          filename: 'common.[chunkhash].less'
+        })
+      ]
+    : [new FriendlyErrorsPlugin()]
+};

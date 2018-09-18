@@ -2,12 +2,13 @@
   <div class="g-bd">
     <div id="j-bd">
       <div class="g-row m-index">
+        djddldslsddssddddiouewiewj
         <v-header :nav-data="headNavData"/>
         <v-banner/>
         <v-floor-one/>
         <v-bottom-nav :bot-nav-data="botNavData"/>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 <script>
@@ -19,7 +20,7 @@ import vBottomNav from '@/components/BottomNav.vue';
 import Service from './service';
 
 export default {
-  name: "Index",
+  name: 'Index',
   components: {
     vHeader,
     vBanner,
@@ -33,18 +34,18 @@ export default {
     };
   },
   created() {
-    this.serviceGet()
+    this.serviceGet();
   },
   mounted() {},
   watch: {},
   methods: {
     serviceGet() {
-      Service.get().then((data) => {
+      Service.get().then(data => {
         this.headNavData = data;
-      })
-      Service.getBottom().then((data) => {
+      });
+      Service.getBottom().then(data => {
         this.botNavData = data;
-      })
+      });
     }
   }
 };

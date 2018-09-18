@@ -66,8 +66,8 @@
             ├── conf.js
             ├── index.vue
             ├── mock.js
-            └── service.js  
-        
+            └── service.js
+
 ````
 
 ### 统一的职责划分

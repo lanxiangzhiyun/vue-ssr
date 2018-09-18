@@ -1,9 +1,11 @@
-const glob = require('glob')
-const webpack = require('webpack')
-const merge = require('webpack-merge')
-const base = require('./webpack.base.config')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
-const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const glob = require('glob');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const base = require('./webpack.base.config');
+const SWPrecachePlugin = require('sw-precache-webpack-plugin');
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin');
+
 const config = merge(base, {
   entry: {
     app: './src/entry-client.js',
@@ -42,11 +44,26 @@ const config = merge(base, {
       // minChunks: Infinity
       chunks: ['vendors', 'vues']
     }),
+    // inject skeleton content(DOM & CSS) into HTML
+    new SkeletonWebpackPlugin({
+      webpackConfig: require('./webpack.skeleton.conf'),
+      quiet: true,
+      minimize: true,
+      router: {
+        mode: 'hash',
+        routes: [
+          {
+            path: '/',
+            skeletonId: 'skeleton2'
+          }
+        ]
+      }
+    }),
     // 此插件在输出目录中
     // 生成 `vue-ssr-client-manifest.json`。
     new VueSSRClientPlugin()
   ]
-})
+});
 
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
@@ -58,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
       dontCacheBustUrlsMatching: /\.\w{8}\./,
       staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/]
     })
-  )
+  );
 }
 
-module.exports = config
+module.exports = config;

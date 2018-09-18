@@ -1,7 +1,7 @@
 /**
  *  系统级配置
  */
-import {mergeMock} from '../../public/utils/confUtils'
+import { mergeMock } from '../../public/utils/confUtils';
 /**
  *  页面级 MOCK 开关
  */
@@ -16,7 +16,7 @@ const MODULECONF = {
     MOCK: true,
     API: {
       GET: '/api/home',
-      GETBOTTOM: '/api/home',
+      GETBOTTOM: '/api/home'
     }
   }
 };
